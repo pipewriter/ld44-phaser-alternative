@@ -1,3 +1,6 @@
+window.UNITS_WIDE = 16/9;
+window.UNITS_TALL = 1;
+
 
 const addTagToHead = ({tag, attributes, innerContent}) => {
     const outer = document.createElement(tag);
@@ -144,7 +147,7 @@ window.initializeWebGL = (function initializeWebGL(){
     // gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    
+
     window.gl = gl;
 })();
 
@@ -404,4 +407,9 @@ window.drawpic.init = async function initDrawPic(imageUrl){
         const id= [0, 1, 2, 0, 2, 3];
         img(vd, id);
     }
+}
+
+window.RESET_FOR_NEXT_FRAME = () => {
+    gl.viewport(0, 0, window.GAME.canvas.width, window.GAME.canvas.height);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 }

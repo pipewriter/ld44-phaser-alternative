@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+    <meta charset="utf-8" />
+    <head>
+        <title>Example 4</title>
+    </head>
+    <body>
+        <script src="engine.js"></script>
+
+        <script>
+            (async () => {
+                const jsonString = await new Promise((resolve, reject) => {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            resolve(xhttp.responseText);
+                        }
+                    };
+                    xhttp.open("GET", "intro.json", true);
+                    xhttp.send();
+                });
+                
+                const boardData = JSON.parse(jsonString);
+
+                const boardHeight = boardData.layers[0].height;
+                const boardWidth = boardData.layers[0].width;
+                const tileIndexArray = boardData.layers[0].data;
+                const tileLookupObject = boardData.tilesets[0].tiles;
+                const tileLookupArray = Object.entries(tileLookupObject).map(lookupItem => lookupItem[1]);
+
+                for(let i = 0; i < tileLookupArray.length; i++){
+                    const lookupItem = tileLookupArray[i];
+                    lookupItem.drawFunction = await window.drawpic.init(lookupItem.image);
+                }
+
+                const tileSideLength = 0.05;
+                for(let x = 0; x < boardWidth; x++){
+                    for(let y = 0; y < boardHeight; y++){
+                        const tileIndex = tileIndexArray[y * boardWidth + x];
+                        const {drawFunction} = tileLookupObject[tileIndex];
+                        drawFunction({
+                            x: tileSideLength * x + tileSideLength / 2,
+                            y: tileSideLength * y + tileSideLength / 2,
+                            r: 0,
+                            h: tileSideLength,
+                            w: tileSideLength
+                        })
+                    }
+                }
+            })();
+        </script>
+    </body>
+</html>

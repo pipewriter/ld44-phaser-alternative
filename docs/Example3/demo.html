@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+    <meta charset="utf-8" />
+    <head>
+        <title>Example 3</title>
+    </head>
+    <body>
+        <script src="engine.js"></script>
+
+        <script>
+            (async () => {
+                const drawTile = await window.drawpic.init("../tile_pics/paving_01_tile_256_01.png");
+                
+                function step(timestamp) {
+                    window.RESET_FOR_NEXT_FRAME();
+                    
+                    drawTile({
+                        x: window.UNITS_WIDE/2,
+                        y: window.UNITS_TALL/2,
+                        r: timestamp/1000,
+                        h: 0.2,
+                        w: 0.2
+                    });
+                    
+                    window.requestAnimationFrame(step);
+                }
+
+                window.requestAnimationFrame(step);
+            })();
+        </script>
+    </body>
+</html>
